@@ -1,16 +1,13 @@
-name: Build mmb
+name: Upload to PyPi
 
 on:
   push:
     branches:
       - develop
       - main
-    paths:
-      - 'mmb/**'
-      - '.github/workflows/mmb.yaml'
 
 jobs:
-  build_mmb_dbt_image:
+  push-to-pypi:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GIT_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
