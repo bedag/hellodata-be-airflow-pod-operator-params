@@ -1,0 +1,25 @@
+name: Build mmb
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+    paths:
+      - 'mmb/**'
+      - '.github/workflows/mmb.yaml'
+
+jobs:
+  build_mmb_dbt_image:
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GIT_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Push package to PyPi
+        run: |
+          echo "Hello from pipeline"
