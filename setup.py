@@ -1,14 +1,13 @@
 from setuptools import setup
 
 setup(
-    name='pod-operator-params',
-    version='0.1.0',    
+    name='hellodata_pod_operator_params',
+    version='0.0.2',    
     description='This package aims to simplify the usage of airflow k8s pod operator',
     url='https://github.com/felix-bedag/pod-operator-params',
     author='Felix Neidhart',
     author_email='felix.neidhart@bedag.ch',
-    license='BSD-3-Clause',
-    packages=['pod-operator-params'],
+    packages=['src.hellodata_pod_operator_params'],
     install_requires=[
         'apache-airflow-providers-cncf-kubernetes> 8.0.0',
         'kubernetes>=29.0.0',

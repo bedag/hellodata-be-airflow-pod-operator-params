@@ -12,11 +12,14 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GIT_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    runs-on: ubuntu-latest
+    runs-on: pyton:1.10-slim
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
       - name: Push package to PyPi
         run: |
-          echo "Hello from pipeline"
+          python -m pip install --upgrade pip
+          pip install setuptools wheel twine
+          python setup.py sdist bdist_wheel
+          twine upload --repository testpypi dist/*
