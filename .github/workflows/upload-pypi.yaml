@@ -7,15 +7,24 @@ on:
       - main
 
 jobs:
-  push-to-pypi:
+  push-to-testpypi:
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      GIT_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PACKAGE_INDEX_TOKEN: ${{ secrets.PACKAGE_INDEX_TOKEN }}
 
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
+      
+      - name: Determine package index
+        shell: bash
+        run: |
+          BRANCH_NAME=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
+          echo "Branch name is: $BRANCH_NAME"
+          [ $BRANCH_NAME = "main" ] && PACKAGE_INDEX='pypi' || IMAGE_TAG='testpypi'
+          echo "Package index is: $PACKAGE_INDEX"
+          echo "package_index=$PACKAGE_INDEX" >> $GITHUB_OUTPUT
+        id: determine_package_index
 
       - name: Set up Python environment
         uses: actions/setup-python@v5
@@ -27,4 +36,4 @@ jobs:
           python -m pip install --upgrade pip
           pip install setuptools wheel twine
           python setup.py sdist bdist_wheel
-          twine upload --repository testpypi dist/*
+          twine upload --repository ${{ steps.determine_package_index.package_index }} dist/* -u __token__ -p $PACKAGE_INDEX_TOKEN
