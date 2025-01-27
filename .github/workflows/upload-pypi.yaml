@@ -12,7 +12,7 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GIT_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    runs-on: pyton:1.10-slim
+    runs-on: python:1.10-slim
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
