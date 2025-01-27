@@ -36,4 +36,4 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           python setup.py sdist bdist_wheel
-          twine upload --repository ${{ steps.determine_package_index.package_index }} dist/* -u __token__ -p ${{ secrets.PACKAGE_INDEX_TOKEN }}
+          twine upload --repository ${{ steps.determine_package_index.package_index }} dist/* -u __token__ -p '${PACKAGE_INDEX_TOKEN}''
