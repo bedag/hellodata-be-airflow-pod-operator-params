@@ -21,7 +21,7 @@ jobs:
         run: |
           BRANCH_NAME=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
           echo "Branch name is: $BRANCH_NAME"
-          [ $BRANCH_NAME = "main" ] && PACKAGE_INDEX='pypi' || IMAGE_TAG='testpypi'
+          [ $BRANCH_NAME = "main" ] && PACKAGE_INDEX='pypi' || PACKAGE_INDEX='testpypi'
           echo "Package index is: $PACKAGE_INDEX"
           echo "package_index=$PACKAGE_INDEX" >> $GITHUB_OUTPUT
         id: determine_package_index
