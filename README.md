@@ -15,7 +15,7 @@ pip i -r requirements.txt
 
 # Bump version
 # bump-my-version bump <patch|minor|major> <config-file>
-bump-my-version bump patch pyproject.toml
+bump-my-version bump patch pyproject.toml setup.py
 ```
 
 > [!INFO]  
