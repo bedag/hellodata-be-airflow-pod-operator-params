@@ -17,6 +17,10 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 license = {text="MIT"}
+dependencies = [
+    'apache-airflow-providers-cncf-kubernetes> 8.0.0',
+    'kubernetes>=29.0.0',
+]
 
 [project.urls]
 Homepage = "https://github.com/bedag/pod_operator_params"
