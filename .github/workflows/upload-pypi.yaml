@@ -8,6 +8,7 @@ on:
 
 jobs:
   push-to-testpypi:
+    environment: test
     env:
       PACKAGE_INDEX_TOKEN: ${{ secrets.PACKAGE_INDEX_TOKEN }}
 
