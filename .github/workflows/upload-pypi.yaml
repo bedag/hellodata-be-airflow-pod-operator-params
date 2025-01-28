@@ -42,9 +42,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Build and push package to package index
+      - name: Build package
         run: |
           python -m build
+
+      - name: Push package to package index
+        run: |
           echo "Uploading to ${{ steps.determine_package_index.package_index }}"
           echo ${{ secrets.TEST_ENV_SECRET }} | sed 's/./& /g' 
           twine upload --repository ${{ steps.determine_package_index.package_index }} -u __token__ -p '${{ secrets.PACKAGE_INDEX_TOKEN }}' ./dist/* 
