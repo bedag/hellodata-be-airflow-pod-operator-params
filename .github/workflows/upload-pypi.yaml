@@ -2,12 +2,25 @@ name: Upload to PyPi
 
 on:
   push:
-    tags:
-      - v*
+    branches:
+      - main
+      - 'develop'
 
 jobs:
+  debug-print:
+    runs-on: ubuntu-latest
+    steps:
+      - name: debug print
+        shell: bash
+        run: |
+          BRANCH_NAME=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
+          echo "Branch name is: $BRANCH_NAME"
+          echo "GITHUB_REF: $GITHUB_REF"
+          echo "GITHUB_REF_NAME: $GITHUB_REF_NAME"
+
+
   push-to-testpypi:
-    if: (endsWith(github.ref, 'main') || endsWith(github.ref, 'develop')
+    if: (startswith(github.ref_name, 'v')
     environment: ${{ github.ref_name }}
     env:
       PACKAGE_INDEX_TOKEN: ${{ secrets.PACKAGE_INDEX_TOKEN }}
