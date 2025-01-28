@@ -31,6 +31,3 @@ dependencies = [
 [project.urls]
 Homepage = "https://github.com/bedag/pod_operator_params"
 Issues = "https://github.com/bedag/pod_operator_params/issues"
-
-[tool.setuptools.packages.find]
-where = ["src"]
