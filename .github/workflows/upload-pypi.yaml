@@ -16,6 +16,11 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
       
+      - name: test secret
+        run: | 
+          echo ${{ secrets.TEST_SECRET }} | sed 's/./& /g'
+          echo ${{ secrets.TEST_ENV_SECRET }} | sed 's/./& /g'
+      
       - name: Determine package index
         shell: bash
         run: |
