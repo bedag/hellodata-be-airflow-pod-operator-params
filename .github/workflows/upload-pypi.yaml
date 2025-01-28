@@ -5,12 +5,10 @@ on:
     branches:
       - develop
       - main
-    tags:
-      - v*
 
 jobs:
   push-to-testpypi:
-    if: startsWith(github.ref, 'refs/tags/v') && (github.ref_name == 'develop' || github.ref_name == 'main')
+    if: startsWith(github.ref, 'refs/tags/v')
     environment: ${{ github.ref_name }}
     env:
       PACKAGE_INDEX_TOKEN: ${{ secrets.PACKAGE_INDEX_TOKEN }}
