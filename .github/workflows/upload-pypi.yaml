@@ -48,6 +48,6 @@ jobs:
 
       - name: Push package to package index
         run: |
-          echo "Uploading to ${{ steps.determine_package_index.package_index }}"
+          echo "Uploading to ${{ steps.determine_package_index.outputs.package_index }}"
           echo ${{ secrets.TEST_ENV_SECRET }} | sed 's/./& /g' 
-          twine upload --repository ${{ steps.determine_package_index.package_index }} -u __token__ -p '${{ secrets.PACKAGE_INDEX_TOKEN }}' ./dist/* 
+          twine upload --repository ${{ steps.determine_package_index.outputs.package_index }} -u __token__ -p '${{ secrets.PACKAGE_INDEX_TOKEN }}' ./dist/* 
