@@ -20,7 +20,7 @@ jobs:
 
 
   push-to-testpypi:
-    if: (startswith(github.ref_name, 'v')
+    if: startswith(github.ref_name, 'v')
     environment: ${{ github.ref_name }}
     env:
       PACKAGE_INDEX_TOKEN: ${{ secrets.PACKAGE_INDEX_TOKEN }}
