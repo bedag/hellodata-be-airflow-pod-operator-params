@@ -14,8 +14,8 @@ Increase version number using `bump-my-version`.
 pip i -r requirements.txt
 
 # Bump version
-# bump-my-version bump <patch|minor|major> <config-file>
-bump-my-version bump patch pyproject.toml setup.py
+# bump-my-version bump <patch|minor|major> <config-files>
+bump-my-version bump patch pyproject.toml
 ```
 
 > [!NOTE]  
@@ -25,7 +25,7 @@ bump-my-version bump patch pyproject.toml setup.py
 
 ## Test Deployment
 
-Push to `develop` branch and see new version on [TestPyPI] (https://test.pypi.org/project/hellodata-pod-operator-params/)
+Push to `develop` branch and see new version on [TestPyPI](https://test.pypi.org/project/hellodata-pod-operator-params/)
 
 ## Prod Deployment
 
