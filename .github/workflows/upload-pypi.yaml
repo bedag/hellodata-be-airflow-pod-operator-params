@@ -3,11 +3,12 @@ name: Upload to PyPi
 on:
   push:
     branches:
-      - develop
       - main
+      - develop
 
 jobs:
   push-to-testpypi:
+    environment: ${{ github.ref_name }}
     env:
       PACKAGE_INDEX_TOKEN: ${{ secrets.PACKAGE_INDEX_TOKEN }}
 
@@ -21,7 +22,7 @@ jobs:
         run: |
           BRANCH_NAME=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
           echo "Branch name is: $BRANCH_NAME"
-          [ $BRANCH_NAME = "main" ] && PACKAGE_INDEX='pypi' || IMAGE_TAG='testpypi'
+          [ $BRANCH_NAME = "main" ] && PACKAGE_INDEX='pypi' || PACKAGE_INDEX='testpypi'
           echo "Package index is: $PACKAGE_INDEX"
           echo "package_index=$PACKAGE_INDEX" >> $GITHUB_OUTPUT
         id: determine_package_index
@@ -31,12 +32,16 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Download dependencies
+      - name: Download and install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Build and push package to package index
+      - name: Build package
         run: |
           python -m build
-          twine upload --repository ${{ steps.determine_package_index.package_index }} dist/* -u __token__ -p '${PACKAGE_INDEX_TOKEN}'
+
+      - name: Push package to package index
+        run: |
+          echo "Uploading to ${{ steps.determine_package_index.outputs.package_index }}"
+          twine upload --repository ${{ steps.determine_package_index.outputs.package_index }} -u __token__ -p '${{ secrets.PACKAGE_INDEX_TOKEN }}' ./dist/* 
