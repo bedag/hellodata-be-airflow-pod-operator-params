@@ -18,7 +18,7 @@ pip i -r requirements.txt
 bump-my-version bump patch pyproject.toml setup.py
 ```
 
-> [!INFO]  
+> [!NOTE]  
 > `bump-my-version` will update the version and create a commit and a tag for the new version.
 > This commit can be pushed to upload a new version of the library to the respective package index (test / prod).
 
