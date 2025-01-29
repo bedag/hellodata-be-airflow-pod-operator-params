@@ -29,4 +29,4 @@ Push to `develop` branch and see new version on [TestPyPI] (https://test.pypi.or
 
 ## Prod Deployment
 
-Push to `main` branch and see new version on PyPI (todo)
+Push to `main` branch and see new version on [PyPI](https://pypi.org/project/hellodata-pod-operator-params/)
