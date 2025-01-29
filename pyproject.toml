@@ -29,5 +29,6 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/bedag/pod_operator_params"
-Issues = "https://github.com/bedag/pod_operator_params/issues"
+Homepage = "https://github.com/bedag/hellodata-pod-operator-params"
+Issues = "https://github.com/bedag/hellodata-pod-operator-params/issues"
+github = "https://github.com/bedag/hellodata-pod-operator-params"
