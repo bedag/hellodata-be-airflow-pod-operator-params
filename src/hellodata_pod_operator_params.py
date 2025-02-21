@@ -15,6 +15,7 @@ class EphemeralVolume:
 
 def get_pod_operator_params(
     image: str,
+    namespace: str,
     secret_names: List[str] = [],
     configmap_names: List[str] = [],
     cpus: float = 1.0, 
@@ -44,7 +45,7 @@ def get_pod_operator_params(
     
     resources = __get_compute_resources(cpus, memory_in_Gi, local_ephemeral_storage_in_Gi)
     secrets = [__get_secret(secret_name) for secret_name in secret_names]
-    return __get_params_with_resources(image, secrets, configmap_names, resources, large_ephemeral_storage_in_Gi, startup_timeout_in_seconds, mount_storage_hellodata_pvc, env_vars)
+    return __get_params_with_resources(image, namespace, secrets, configmap_names, resources, large_ephemeral_storage_in_Gi, startup_timeout_in_seconds, mount_storage_hellodata_pvc, env_vars)
 
 def __get_secret(secret_name: str):
     return Secret('env', None, secret_name)
@@ -89,6 +90,7 @@ def __get_volume_mount_for(volume_name: str, mount_path: str = None):
 
 def __get_params_with_resources(
     image: str,
+    namespace: str,
     secrets: List[Secret],
     configmaps: List[str],
     compute_resources: k8s.V1ResourceRequirements,
@@ -99,7 +101,6 @@ def __get_params_with_resources(
     ) -> dict:
 
     data_path = "/mnt/storage/" # the data storage mount path into the container-image
-    namespace = os.getenv("HD_NAMESPACE")
 
     storage_hellodata_volume_claim_name = "storage-hellodata"
     storage_hellodata_volume_name = "storage"
