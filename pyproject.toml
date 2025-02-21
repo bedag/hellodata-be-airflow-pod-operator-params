@@ -26,7 +26,7 @@ license = {file="LICENSE"}
 dependencies = [
     'apache-airflow-providers-cncf-kubernetes>=7.13.0',
     'kubernetes>=23.6.0',
-    'psycopg2-binary>=2.9.10',
+    'psycopg2-binary>=2.9.10', # Transitive dependency of airflow secret. Not installed per default and causes error.
 ]
 
 [project.urls]
