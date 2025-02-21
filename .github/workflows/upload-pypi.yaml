@@ -4,7 +4,8 @@ on:
   push:
     branches:
       - main
-      - develop
+    paths:
+      - 'pyproject.toml'
 
 jobs:
   push-to-testpypi:
@@ -17,16 +18,6 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
       
-      - name: Determine package index
-        shell: bash
-        run: |
-          BRANCH_NAME=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
-          echo "Branch name is: $BRANCH_NAME"
-          [ $BRANCH_NAME = "main" ] && PACKAGE_INDEX='pypi' || PACKAGE_INDEX='testpypi'
-          echo "Package index is: $PACKAGE_INDEX"
-          echo "package_index=$PACKAGE_INDEX" >> $GITHUB_OUTPUT
-        id: determine_package_index
-
       - name: Set up Python environment
         uses: actions/setup-python@v5
         with:
@@ -43,5 +34,5 @@ jobs:
 
       - name: Push package to package index
         run: |
-          echo "Uploading to ${{ steps.determine_package_index.outputs.package_index }}"
-          twine upload --repository ${{ steps.determine_package_index.outputs.package_index }} -u __token__ -p '${{ secrets.PACKAGE_INDEX_TOKEN }}' ./dist/* 
+          echo "Uploading to 💎 GemFury 💎"
+          curl -F package=@dist/* https://'${{ secrets.PACKAGE_INDEX_TOKEN }}'@push.fury.io/felix-bedag/
