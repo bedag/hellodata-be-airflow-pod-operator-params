@@ -35,4 +35,5 @@ jobs:
       - name: Push package to package index
         run: |
           echo "Uploading to 💎 GemFury 💎"
-          curl -F package=@dist/* https://'${{ secrets.PACKAGE_INDEX_TOKEN }}'@push.fury.io/felix-bedag/
+          FILE_NAME=`ls ./dist/ | grep .whl`
+          curl -F package=@dist/$FILE_NAME https://'${{ secrets.PACKAGE_INDEX_TOKEN }}'@push.fury.io/felix-bedag/
