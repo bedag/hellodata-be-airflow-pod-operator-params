@@ -1,7 +1,7 @@
 from kubernetes import client
 from kubernetes.client import models as k8s
 from airflow.kubernetes.secret import Secret  # type: ignore
-from typing import Optional, List
+from typing import Optional, List, Any
 import os
 
 __LIMIT_MULTIPLIER = 1.5
@@ -28,8 +28,8 @@ def get_pod_operator_params(
     local_ephemeral_storage_in_Gi: float = 1.0,
     startup_timeout_in_seconds: int = 2 * 60,
     large_ephemeral_storage_volume: Optional[EphemeralVolume] = None,
-    env_vars: dict = {},
-) -> dict:
+    env_vars: dict[str, str] = {},
+) -> dict[str, Any]:
     """
     Generate parameters for a Kubernetes Pod Operator.
     Args:
@@ -65,11 +65,13 @@ def get_pod_operator_params(
     )
 
 
-def __get_secret(secret_name: str):
+def __get_secret(secret_name: str) -> Secret:
     return Secret("env", None, secret_name)
 
 
-def __get_compute_resources(cpus: float, memory_in_Gi: float, storage_in_Gi: float):
+def __get_compute_resources(
+    cpus: float, memory_in_Gi: float, storage_in_Gi: float
+) -> k8s.V1ResourceRequirements:
     return k8s.V1ResourceRequirements(
         requests={
             "memory": f"{memory_in_Gi}Gi",
@@ -84,7 +86,9 @@ def __get_compute_resources(cpus: float, memory_in_Gi: float, storage_in_Gi: flo
     )
 
 
-def __get_ephemeral_storage_volume(name: str, size_in_Gi: float, storage_class: str):
+def __get_ephemeral_storage_volume(
+    name: str, size_in_Gi: float, storage_class: str
+) -> client.V1Volume:
     return client.V1Volume(
         name=name,
         ephemeral=client.V1EphemeralVolumeSource(
@@ -103,7 +107,9 @@ def __get_ephemeral_storage_volume(name: str, size_in_Gi: float, storage_class: 
     )
 
 
-def __get_volume_mount_for(volume_name: str, mount_path: Optional[str] = None):
+def __get_volume_mount_for(
+    volume_name: str, mount_path: Optional[str] = None
+) -> client.V1VolumeMount:
     if mount_path is None:
         mount_path = f"/{volume_name}"
     return client.V1VolumeMount(
@@ -120,8 +126,8 @@ def __get_params_with_resources(
     ephemeral_volume: Optional[EphemeralVolume],
     timeout_in_seconds: int,
     mount_storage_hellodata_pvc: bool,
-    env_vars: dict,
-) -> dict:
+    env_vars: dict[str, str],
+) -> dict[str, Any]:
 
     data_path = "/mnt/storage/"  # the data storage mount path into the container-image
 
