@@ -16,7 +16,7 @@ repos:
         # https://pre-commit.com/#top_level-default_language_version
         language_version: python3.10
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: ''
+    rev: 'main'
     hooks:
     -   id: mypy
   - repo: https://github.com/gitleaks/gitleaks
