@@ -15,7 +15,7 @@ Increase version number using `bump-my-version`.
 
 ```bash
 # Install bump-my-version
-pip i -r requirements.txt
+pip install -r requirements.txt
 
 # Bump version
 # bump-my-version bump <patch|minor|major> <config-files>
