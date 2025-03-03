@@ -1,4 +1,6 @@
 # HelloDATA BE Pod Operator Params (OpenSource) <!-- omit from toc -->
+- [One time setup](#one-time-setup)
+- [When coming back...](#when-coming-back)
 - [Deployment](#deployment)
   - [Prerequisites](#prerequisites)
   - [Prod Deployment](#prod-deployment)
@@ -6,17 +8,53 @@
 - [Get Tokens](#get-tokens)
   - [Push Tokens](#push-tokens)
 
+# One time setup
+
+1. Create local Python environment
+```bash
+python -m venv venv
+```
+
+2. Activate environment
+```bash
+# For Linux / MacOS
+source venv/bin/activate
+```
+
+```Powershell
+# For Windows Powershell
+. ./venv/Scripts/Activate.ps1
+```
+
+3. Install dependencies
+```bash
+pip install -r requirements.txt
+```
+
+4. Activate pre-commit hooks
+```bash
+pre-commit install
+```
+
+# When coming back...
+Make sure to reactivate Pythons venv:
+```bash
+# For Linux / MacOS
+source venv/bin/activate
+```
+
+```Powershell
+# For Windows Powershell
+. ./venv/Scripts/Activate.ps1
+```
 
 # Deployment
 
 ## Prerequisites
-Increase version number using `bump-my-version`.
+Increase version number using `bump-my-version` (commit all changes beforehand).
 
 
 ```bash
-# Install bump-my-version
-pip install -r requirements.txt
-
 # Bump version
 # bump-my-version bump <patch|minor|major> <config-files>
 bump-my-version bump patch pyproject.toml
