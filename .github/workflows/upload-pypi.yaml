@@ -1,4 +1,4 @@
-name: Upload to PyPi
+name: Upload to PyPI
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
       - 'pyproject.toml'
 
 jobs:
-  push-to-testpypi:
+  push-to-gemfury:
     environment: ${{ github.ref_name }}
     env:
       PACKAGE_INDEX_TOKEN: ${{ secrets.PACKAGE_INDEX_TOKEN }}
@@ -36,4 +36,4 @@ jobs:
         run: |
           echo "Uploading to 💎 GemFury 💎"
           FILE_NAME=`ls ./dist/ | grep .whl`
-          curl -F package=@dist/$FILE_NAME https://'${{ secrets.PACKAGE_INDEX_TOKEN }}'@push.fury.io/felix-bedag/
+          curl -F package=@dist/$FILE_NAME https://'${{ secrets.PACKAGE_INDEX_TOKEN }}'@push.fury.io/datenstreambedag/

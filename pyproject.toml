@@ -30,6 +30,6 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/bedag/hellodata-pod-operator-params"
-Issues = "https://github.com/bedag/hellodata-pod-operator-params/issues"
-github = "https://github.com/bedag/hellodata-pod-operator-params"
+Homepage = "https://github.com/bedag/hellodata-be-airflow-pod-operator-params"
+Issues = "https://github.com/bedag/hellodata-be-airflow-pod-operator-params/issues"
+github = "https://github.com/bedag/hellodata-be-airflow-pod-operator-params"
