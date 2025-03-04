@@ -4,7 +4,7 @@
 # pylint: disable=invalid-name
 # pylint: disable=too-few-public-methods
 # pylint: disable=too-many-positional-arguments
-from typing import Optional, List, Any
+from typing import Optional, List, Any, Dict
 from kubernetes import client
 from kubernetes.client import models as k8s
 
@@ -44,8 +44,8 @@ def get_pod_operator_params(
     local_ephemeral_storage_in_Gi: float = 1.0,
     startup_timeout_in_seconds: int = 2 * 60,
     large_ephemeral_storage_volume: Optional[EphemeralVolume] = None,
-    env_vars: Optional[dict[str, str]] = None,
-) -> dict[str, Any]:
+    env_vars: Optional[Dict[str, str]] = None,
+) -> Dict[str, Any]:
     """
     Generate parameters for a Kubernetes Pod Operator.
     Args:
@@ -59,9 +59,9 @@ def get_pod_operator_params(
         local_ephemeral_storage_in_Gi (float, optional): Amount of local ephemeral storage in GiB to allocate to the pod. Defaults to 1.0.
         startup_timeout_in_seconds (int, optional): Timeout in seconds for the pod to start up. Defaults to 120 seconds.
         large_ephemeral_storage_volume (Optional[EphemeralVolume], optional): Large ephemeral storage volume to allocate to the pod.
-        env_vars (dict, optional): Additional environment variables to set in the pod. Defaults to an empty dictionary.
+        env_vars (Dict, optional): Additional environment variables to set in the pod. Defaults to an empty dictionary.
     Returns:
-        dict: A dictionary containing the parameters for the Kubernetes Pod Operator.
+        Dict: A dictionary containing the parameters for the Kubernetes Pod Operator.
     """
 
     if secret_names is None:
@@ -151,8 +151,8 @@ def __get_params_with_resources(
     ephemeral_volume: Optional[EphemeralVolume],
     timeout_in_seconds: int,
     mount_storage_hellodata_pvc: bool,
-    env_vars: dict[str, str],
-) -> dict[str, Any]:
+    env_vars: Dict[str, str],
+) -> Dict[str, Any]:
 
     data_path = "/mnt/storage/"  # the data storage mount path into the container-image
 
