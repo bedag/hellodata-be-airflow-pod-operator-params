@@ -1,9 +1,15 @@
 """Provide parameters for a Kubernetes Pod Operator."""
 
+# pylint: disable=too-many-arguments
+# pylint: disable=invalid-name
+# pylint: disable=too-few-public-methods
+# pylint: disable=too-many-positional-arguments
+from typing import Optional, List, Any
 from kubernetes import client
 from kubernetes.client import models as k8s
-from airflow.kubernetes.secret import Secret  # type: ignore
-from typing import Optional, List, Any
+
+# pylint: disable-next=import-error,no-name-in-module
+from airflow.providers.cncf.kubernetes.secret import Secret  # type: ignore
 
 __LIMIT_MULTIPLIER = 1.5
 
@@ -30,33 +36,42 @@ class EphemeralVolume:
 def get_pod_operator_params(
     image: str,
     namespace: str,
-    secret_names: List[str] = [],
-    configmap_names: List[str] = [],
+    secret_names: Optional[List[str]] = None,
+    configmap_names: Optional[List[str]] = None,
     cpus: float = 1.0,
     memory_in_Gi: float = 1.0,
     mount_storage_hellodata_pvc: bool = True,
     local_ephemeral_storage_in_Gi: float = 1.0,
     startup_timeout_in_seconds: int = 2 * 60,
     large_ephemeral_storage_volume: Optional[EphemeralVolume] = None,
-    env_vars: dict[str, str] = {},
+    env_vars: Optional[dict[str, str]] = None,
 ) -> dict[str, Any]:
     """
     Generate parameters for a Kubernetes Pod Operator.
     Args:
         image (str): The Docker image to use for the pod.
         namespace (str): The Kubernetes namespace in which to create the pod.
-        secret_names (List[str], optional): List of Kubernetes secret names to mount in the pod as env variables. Defaults to an empty list.
-        configmap_names (List[str], optional): List of Kubernetes configmap names to mount in the pod as env variables. Defaults to an empty list.
+        secret_names (List[str], optional): List of Kubernetes secret names to mount in the pod as env variables.
+        configmap_names (List[str], optional): List of Kubernetes configmap names to mount in the pod as env variables.
         cpus (float, optional): Number of CPU cores to allocate to the pod. Defaults to 1.0.
         memory_in_Gi (float, optional): Amount of memory in GiB to allocate to the pod. Defaults to 1.0.
-        mount_storage_hellodata_pvc (bool, optional): Whether to mount the storage-hellodata volume under /mnt/storage-hellodata. Defaults to True.
+        mount_storage_hellodata_pvc (bool, optional): Whether to mount the storage-hellodata volume under /mnt/storage-hellodata.
         local_ephemeral_storage_in_Gi (float, optional): Amount of local ephemeral storage in GiB to allocate to the pod. Defaults to 1.0.
         startup_timeout_in_seconds (int, optional): Timeout in seconds for the pod to start up. Defaults to 120 seconds.
-        large_ephemeral_storage_volume (Optional[EphemeralVolume], optional): Additional large ephemeral storage volume to allocate to the pod. Defaults to None.
+        large_ephemeral_storage_volume (Optional[EphemeralVolume], optional): Large ephemeral storage volume to allocate to the pod.
         env_vars (dict, optional): Additional environment variables to set in the pod. Defaults to an empty dictionary.
     Returns:
         dict: A dictionary containing the parameters for the Kubernetes Pod Operator.
     """
+
+    if secret_names is None:
+        secret_names = []
+
+    if configmap_names is None:
+        configmap_names = []
+
+    if env_vars is None:
+        env_vars = {}
 
     resources = __get_compute_resources(
         cpus, memory_in_Gi, local_ephemeral_storage_in_Gi
@@ -141,18 +156,15 @@ def __get_params_with_resources(
 
     data_path = "/mnt/storage/"  # the data storage mount path into the container-image
 
-    storage_hellodata_volume_claim_name = "storage-hellodata"
-    storage_hellodata_volume_name = "storage"
-
-    in_cluster = True
-
     volumes = []
     volume_mounts = []
 
     if mount_storage_hellodata_pvc:
+        storage_hellodata_volume_name = "storage"
+
         # hellodata-storage pv
         storage_hellodata_volume_claim = k8s.V1PersistentVolumeClaimVolumeSource(
-            claim_name=storage_hellodata_volume_claim_name
+            claim_name="storage-hellodata"
         )
         volumes.append(
             k8s.V1Volume(
@@ -190,7 +202,7 @@ def __get_params_with_resources(
         "annotations": {"prometheus.io/scrape": "true"},
         "get_logs": True,
         "is_delete_operator_pod": True,
-        "in_cluster": in_cluster,
+        "in_cluster": True,
         "configmaps": configmaps,
         "cmds": ["/bin/bash", "-cx"],
         "volumes": volumes,
