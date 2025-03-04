@@ -1,13 +1,23 @@
+"""Provide parameters for a Kubernetes Pod Operator."""
+
 from kubernetes import client
 from kubernetes.client import models as k8s
 from airflow.kubernetes.secret import Secret  # type: ignore
 from typing import Optional, List, Any
-import os
 
 __LIMIT_MULTIPLIER = 1.5
 
 
 class EphemeralVolume:
+    """
+    Represents an ephemeral storage volume to be mounted in a Kubernetes pod.
+    Args:
+        name (str): The name of the volume.
+        size_in_Gi (float): The size of the volume in GiB.
+        mount_path (str): The path at which to mount the volume in the pod.
+        storage_class (str): The storage class to use for the volume.
+    """
+
     def __init__(
         self, name: str, size_in_Gi: float, mount_path: str, storage_class: str
     ):
