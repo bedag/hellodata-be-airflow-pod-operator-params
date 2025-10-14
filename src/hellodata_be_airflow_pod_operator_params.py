@@ -204,7 +204,7 @@ def __get_params_with_resources(
         "is_delete_operator_pod": True,
         "in_cluster": True,
         "configmaps": configmaps,
-        "cmds": ["/bin/bash", "-cx"],
+        "cmds": ["/bin/sh", "-cx"],
         "volumes": volumes,
         "volume_mounts": volume_mounts,
         "container_resources": compute_resources,
