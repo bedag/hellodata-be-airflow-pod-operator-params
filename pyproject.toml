@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "hellodata_be_airflow_pod_operator_params"
-version = "2.0.0"
+version = "2.0.1"
 authors = [
   { name="Felix Neidhart", email="felix.neidhart@bedag.ch" },
   { name="Bedag Informatik AG", email="hellodata@bedag.ch" }
