@@ -36,11 +36,11 @@ class EphemeralVolume:
 def get_pod_operator_params(
     image: str,
     namespace: str = "default",
-    secret_names: Optional[List[str]] = None,
-    configmap_names: Optional[List[str]] = None,
+    image_pull_secrets: Optional[List[str]] = None,
+    secrets: Optional[List[str]] = None,
+    configmaps: Optional[List[str]] = None,
     cpus: float = 1.0,
     memory_in_Gi: float = 1.0,
-    mount_storage_hellodata_pvc: bool = True,
     local_ephemeral_storage_in_Gi: float = 1.0,
     startup_timeout_in_seconds: int = 2 * 60,
     large_ephemeral_storage_volume: Optional[EphemeralVolume] = None,
@@ -51,11 +51,11 @@ def get_pod_operator_params(
     Args:
         image (str): The Docker image to use for the pod.
         namespace (str): The Kubernetes namespace in which to create the pod. Defaults to 'default'.
-        secret_names (List[str], optional): List of Kubernetes secret names to mount in the pod as env variables.
-        configmap_names (List[str], optional): List of Kubernetes configmap names to mount in the pod as env variables.
+        image_pull_secrets (List[str], optional): List of image pull secrets for private registries.
+        secrets (List[str], optional): List of Kubernetes secret names to mount in the pod as env variables.
+        configmaps (List[str], optional): List of Kubernetes configmap names to mount in the pod as env variables.
         cpus (float, optional): Number of CPU cores to allocate to the pod. Defaults to 1.0.
         memory_in_Gi (float, optional): Amount of memory in GiB to allocate to the pod. Defaults to 1.0.
-        mount_storage_hellodata_pvc (bool, optional): Whether to mount the storage-hellodata volume under /mnt/storage-hellodata.
         local_ephemeral_storage_in_Gi (float, optional): Amount of local ephemeral storage in GiB to allocate to the pod. Defaults to 1.0.
         startup_timeout_in_seconds (int, optional): Timeout in seconds for the pod to start up. Defaults to 120 seconds.
         large_ephemeral_storage_volume (Optional[EphemeralVolume], optional): Large ephemeral storage volume to allocate to the pod.
@@ -64,11 +64,14 @@ def get_pod_operator_params(
         Dict: A dictionary containing the parameters for the Kubernetes Pod Operator.
     """
 
-    if secret_names is None:
-        secret_names = []
+    if image_pull_secrets is None:
+        image_pull_secrets = []
 
-    if configmap_names is None:
-        configmap_names = []
+    if secrets is None:
+        secrets = []
+
+    if configmaps is None:
+        configmaps = []
 
     if env_vars is None:
         env_vars = {}
@@ -76,16 +79,16 @@ def get_pod_operator_params(
     resources = __get_compute_resources(
         cpus, memory_in_Gi, local_ephemeral_storage_in_Gi
     )
-    secrets = [__get_secret(secret_name) for secret_name in secret_names]
+    secrets = [__get_secret(secret_name) for secret_name in secrets]
     return __get_params_with_resources(
         image,
         namespace,
+        image_pull_secrets,
         secrets,
-        configmap_names,
+        configmaps,
         resources,
         large_ephemeral_storage_volume,
         startup_timeout_in_seconds,
-        mount_storage_hellodata_pvc,
         env_vars,
     )
 
@@ -132,9 +135,17 @@ def __get_ephemeral_storage_volume(
     )
 
 
-def __get_volume_mount_for(
+def get_volume_mount_for(
     volume_name: str, mount_path: Optional[str] = None
 ) -> client.V1VolumeMount:
+    """
+    Get a volume mount for a Kubernetes pod.
+    Args:
+        volume_name (str): The name of the volume to mount.
+        mount_path (str, optional): The path at which to mount the volume in the pod. Defaults to '/{volume_name}'.
+    Returns:
+        client.V1VolumeMount: The volume mount object.
+    """
     if mount_path is None:
         mount_path = f"/{volume_name}"
     return client.V1VolumeMount(
@@ -145,38 +156,17 @@ def __get_volume_mount_for(
 def __get_params_with_resources(
     image: str,
     namespace: str,
+    image_pull_secrets: List[str],
     secrets: List[Secret],
     configmaps: List[str],
     compute_resources: k8s.V1ResourceRequirements,
     ephemeral_volume: Optional[EphemeralVolume],
     timeout_in_seconds: int,
-    mount_storage_hellodata_pvc: bool,
     env_vars: Dict[str, str],
 ) -> Dict[str, Any]:
 
-    data_path = "/mnt/storage/"  # the data storage mount path into the container-image
-
     volumes = []
     volume_mounts = []
-
-    if mount_storage_hellodata_pvc:
-        storage_hellodata_volume_name = "storage"
-
-        # hellodata-storage pv
-        storage_hellodata_volume_claim = k8s.V1PersistentVolumeClaimVolumeSource(
-            claim_name="storage-hellodata"
-        )
-        volumes.append(
-            k8s.V1Volume(
-                name=storage_hellodata_volume_name,
-                persistent_volume_claim=storage_hellodata_volume_claim,
-            )
-        )
-        volume_mounts.append(
-            __get_volume_mount_for(
-                volume_name=storage_hellodata_volume_name, mount_path=data_path
-            )
-        )
 
     if ephemeral_volume is not None:
         # Ephemeral storage for duckdb file
@@ -188,7 +178,7 @@ def __get_params_with_resources(
             )
         )
         volume_mounts.append(
-            __get_volume_mount_for(
+            get_volume_mount_for(
                 ephemeral_volume.name, mount_path=ephemeral_volume.mount_path
             )
         )
@@ -198,7 +188,7 @@ def __get_params_with_resources(
         "namespace": namespace,
         "image": image,
         "image_pull_policy": "Always",
-        "image_pull_secrets": [k8s.V1LocalObjectReference("regcred")],  # type: ignore [misc]
+        "image_pull_secrets": [k8s.V1LocalObjectReference(image_pull_secret) for image_pull_secret in image_pull_secrets],  # type: ignore [misc]
         "annotations": {"prometheus.io/scrape": "true"},
         "get_logs": True,
         "is_delete_operator_pod": True,
