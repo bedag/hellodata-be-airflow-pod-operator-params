@@ -35,7 +35,7 @@ class EphemeralVolume:
 
 def get_pod_operator_params(
     image: str,
-    namespace: str,
+    namespace: str = "default",
     secret_names: Optional[List[str]] = None,
     configmap_names: Optional[List[str]] = None,
     cpus: float = 1.0,
@@ -50,7 +50,7 @@ def get_pod_operator_params(
     Generate parameters for a Kubernetes Pod Operator.
     Args:
         image (str): The Docker image to use for the pod.
-        namespace (str): The Kubernetes namespace in which to create the pod.
+        namespace (str): The Kubernetes namespace in which to create the pod. Defaults to 'default'.
         secret_names (List[str], optional): List of Kubernetes secret names to mount in the pod as env variables.
         configmap_names (List[str], optional): List of Kubernetes configmap names to mount in the pod as env variables.
         cpus (float, optional): Number of CPU cores to allocate to the pod. Defaults to 1.0.
