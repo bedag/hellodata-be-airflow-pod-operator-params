@@ -4,6 +4,16 @@ from airflow import DAG
 from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import (
     KubernetesPodOperator,
 )
+
+##### REMOVE BETWEEN #####
+import os
+import sys
+
+current_file = os.path.abspath(__file__)
+current_directory = os.path.dirname(current_file)
+sys.path.append(current_directory)
+##### REMOVE BETWEEN #####
+
 from hellodata_be_airflow_pod_operator_params import (
     get_pod_operator_params,
     EphemeralVolume,
@@ -11,9 +21,9 @@ from hellodata_be_airflow_pod_operator_params import (
 
 operator_params = get_pod_operator_params(
     "alpine:latest",
-    namespace="al1-hellodata-productsdev",
-    secret_names=["superset-demo-env"],
-    configmap_names=["superset-demo-extra-config"],
+    namespace="al1-hellodata-projectsdev",
+    secrets=["superset-repsda-env"],
+    configmaps=["superset-repsda-extra-config"],
     cpus=0.5,
     memory_in_Gi=0.5,
     local_ephemeral_storage_in_Gi=1,

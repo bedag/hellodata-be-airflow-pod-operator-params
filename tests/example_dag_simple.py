@@ -4,13 +4,22 @@ from airflow import DAG
 from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import (
     KubernetesPodOperator,
 )
+
+##### REMOVE BETWEEN #####
+import os
+import sys
+
+current_file = os.path.abspath(__file__)
+current_directory = os.path.dirname(current_file)
+sys.path.append(current_directory)
+##### REMOVE BETWEEN #####
 from hellodata_be_airflow_pod_operator_params import (
     get_pod_operator_params,
 )  # library import
 
 operator_params = get_pod_operator_params(
     "alpine:latest",
-    namespace="al1-hellodata-productsdev",
+    namespace="al1-hellodata-projectsdev",
     cpus=8,
     memory_in_Gi=10,
     local_ephemeral_storage_in_Gi=6,
