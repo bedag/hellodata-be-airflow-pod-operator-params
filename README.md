@@ -56,8 +56,8 @@ Increase version number using `bump-my-version` (commit all changes beforehand).
 
 ```bash
 # Bump version
-# bump-my-version bump <patch|minor|major> <config-files>
-bump-my-version bump patch pyproject.toml
+# uv tool run bump-my-version bump <patch|minor|major> <config-files>
+uv tool run bump-my-version bump patch pyproject.toml uv.lock
 ```
 
 ## Prod Deployment
