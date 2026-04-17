@@ -27,8 +27,8 @@ operator_params = get_pod_operator_params(
     cpus=8,
     memory_in_Gi=10,
     storage_in_Gi=6,
-    secrets=["superset-demo-config"],
-    configmaps=["superset-demo-extra-config"],
+    secrets=["superset-dd01-config"],
+    configmaps=["superset-dd01-extra-config"],
     startup_timeout_in_seconds=10 * 60,
     env_vars={"key": "value"},
 )
