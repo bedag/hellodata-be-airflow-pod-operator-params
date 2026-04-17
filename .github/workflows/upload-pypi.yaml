@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'pyproject.toml'
+      - .github/workflows/upload-pypi.yaml
 
 jobs:
   push-to-gemfury:
