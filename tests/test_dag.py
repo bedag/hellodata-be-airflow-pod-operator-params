@@ -12,7 +12,9 @@ import sys
 current_file = os.path.abspath(__file__)
 current_directory = os.path.dirname(current_file)
 sys.path.append(current_directory)
-from pod_operator_params import get_pod_operator_params  # local import
+from pod_operator_params import (
+    get_pod_operator_params,
+)  # local import --> copy library file next to DAG file and name it pod_operator_params.py
 
 # ##### REMOVE BETWEEN #####
 # from hellodata_be_airflow_pod_operator_params import (
@@ -25,6 +27,8 @@ operator_params = get_pod_operator_params(
     cpus=8,
     memory_in_Gi=10,
     storage_in_Gi=6,
+    secrets=["superset-demo-config"],
+    configmaps=["superset-demo-extra-config"],
     startup_timeout_in_seconds=10 * 60,
     env_vars={"key": "value"},
 )
